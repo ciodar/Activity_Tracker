@@ -8,6 +8,10 @@
 #include <string>
 
 class Project {
+public:
+    Project(std::string name);
+    std::string getName();
+    void setName(const std::string name);
 protected:
     std::string name;
 };

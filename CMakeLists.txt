@@ -3,4 +3,4 @@ project(Activity_Tracker)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(Activity_Tracker main.cpp Task.cpp Task.h Project.cpp Project.h)
+add_executable(Activity_Tracker main.cpp Task.cpp Task.h Project.cpp Project.h Subject.h Observer.h)
