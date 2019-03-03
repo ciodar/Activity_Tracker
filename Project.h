@@ -6,14 +6,24 @@
 #define ACTIVITY_TRACKER_PROJECT_H
 
 #include <string>
+#include <list>
 
-class Project {
+#include "Subject.h"
+
+class Project : public Subject {
 public:
-    Project(std::string name);
+    explicit Project(std::string name);
+
+    virtual void subscribe(Observer* o) override;
+    virtual void unsubscribe(Observer* o) override;
+    virtual void notify() override;
+
     std::string getName();
     void setName(const std::string name);
 protected:
     std::string name;
+private:
+    std::list<Observer*> observers;
 };
 
 

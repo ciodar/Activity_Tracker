@@ -9,9 +9,23 @@ Project::Project(std::string name) {
 }
 
 std::string Project::getName() {
-    return Project::name
+    return Project::name;
 }
 
 void Project::setName(const std::string name) {
     Project::name = name;
+}
+
+void Project::subscribe(Observer* o) {
+    observers.push_back(o);
+}
+
+void Project::unsubscribe(Observer* o) {
+    observers.remove(o);
+}
+
+void Project::notify() {
+    for( auto itr = std::begin(observers); itr != std::end(observers); itr++) {
+        (*itr)->update();
+    }
 }

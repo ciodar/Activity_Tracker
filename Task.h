@@ -7,18 +7,29 @@
 
 #include <string>
 #include <ctime>
+#include <list>
 
 #include "Project.h"
+#include "Subject.h"
 
-class Task {
+
+class Task : public Subject {
 public:
-    Task(std::string name);
+    explicit Task(std::string name);
+
+    virtual void subscribe(Observer* o) override;
+    virtual void unsubscribe(Observer* o) override;
+    virtual void notify() override;
+
     std::string getName();
     void setName(const std::string name);
+
 protected:
     std::string name;
     time_t taskDate;
     Project* taskProject;
+private:
+    std::list<Observer*> observers;
 };
 
 

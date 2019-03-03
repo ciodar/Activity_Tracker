@@ -1,9 +1,11 @@
 #include <iostream>
+#include <QApplication>
 #include <ctime>
 
-int main() {
+int main(int argc, char *argv[]) {
+    QApplication app(argc, argv);
     // current date/time based on current system
-    time_t now = time(0);
+    time_t now = time(nullptr);
 
     std::cout << "Number of sec since January 1,1970:" << now << std::endl;
     tm *ltm = localtime(&now);
@@ -15,5 +17,5 @@ int main() {
      std::cout << "Time: "<< 1 + ltm->tm_hour << ":";
      std::cout << 1 + ltm->tm_min << ":";
      std::cout << 1 + ltm->tm_sec <<  std::endl;
-    return 0;
+    return app.exec();
 }
