@@ -29,3 +29,15 @@ void Task::notify() {
         (*itr)->update();
     }
 }
+
+Project* Task::getProject() {
+    return Task::taskProject;
+}
+
+time_t Task::getTaskDate() {
+    return Task::taskDate;
+}
+
+time_t Task::getTaskDuration() {
+    return Task::taskDuration;
+}
