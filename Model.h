@@ -11,8 +11,8 @@
 
 class Model : public Subject {
 public:
-    virtual void addObserver(Observer* o) override;
-    virtual void removeObserver(Observer* o) override;
+    virtual void subscribe(Observer* o) override;
+    virtual void unsubscribe(Observer* o) override;
     virtual void notify() override;
 private:
     std::list<Observer*> observers;

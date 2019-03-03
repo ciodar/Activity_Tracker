@@ -17,9 +17,9 @@ class Task : public Subject {
 public:
     explicit Task(std::string name);
 
-    virtual void subscribe(Observer* o) override;
-    virtual void unsubscribe(Observer* o) override;
-    virtual void notify() override;
+    void subscribe(Observer* o) override;
+    void unsubscribe(Observer* o) override;
+    void notify() override;
 
     std::string getName();
     void setName(const std::string name);

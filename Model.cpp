@@ -9,15 +9,11 @@ void Model::notify() {
         observer->update();
 }
 
-void Model::setData(const int i) {
-    data = i;
-    notify();
-}
 
-void Model::addObserver(Observer* o) {
+void Model::subscribe(Observer* o) {
     observers.push_back(o);
 }
 
-void Model::removeObserver(Observer* o) {
+void Model::unsubscribe(Observer* o) {
     observers.remove(o);
 }

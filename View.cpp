@@ -5,7 +5,7 @@
 #include "View.h"
 
 View::~View() {
-    model->removeObserver(this);
+    model->unsubscribe(this);
 }
 
 void View::update() {
@@ -13,6 +13,6 @@ void View::update() {
 }
 
 View::View(Model *m, Controller *c, QWidget *parent) : QMainWindow(parent), model(m), controller(c) {
-    model->addObserver(this);
+    model->subscribe(this);
     update();
 }
