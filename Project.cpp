@@ -29,3 +29,14 @@ void Project::notify() {
         (*itr)->update();
     }
 }
+
+void Project::deleteTask(Task *task) {
+    tasks.remove(task);
+    delete task;
+    notify();
+}
+
+void Project::addTask(Task *task) {
+    tasks.push_back(task);
+    notify();
+}

@@ -23,14 +23,12 @@ public:
 
     std::string getName();
     void setName(const std::string name);
-    Project* getProject();
     time_t getTaskDate();
     time_t getTaskDuration();
 protected:
     std::string name;
     time_t taskDate;
     time_t taskDuration;
-    Project* taskProject;
 private:
     std::list<Observer*> observers;
 };

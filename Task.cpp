@@ -30,10 +30,6 @@ void Task::notify() {
     }
 }
 
-Project* Task::getProject() {
-    return Task::taskProject;
-}
-
 time_t Task::getTaskDate() {
     return Task::taskDate;
 }

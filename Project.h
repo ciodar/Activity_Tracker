@@ -9,6 +9,7 @@
 #include <list>
 
 #include "Subject.h"
+#include "Task.h"
 
 class Project : public Subject {
 public:
@@ -20,10 +21,13 @@ public:
 
     std::string getName();
     void setName(const std::string name);
+    void deleteTask(Task* task);
+    void addTask(Task* task);
 protected:
     std::string name;
 private:
     std::list<Observer*> observers;
+    std::list<Task*> tasks;
 };
 
 
