@@ -8,7 +8,7 @@
 #include <QMainWindow>
 #include "Model.h"
 #include "Controller.h"
-
+#include "ViewWindow.h"
 class View : public QMainWindow, public Observer {
 Q_OBJECT
 public:
@@ -18,6 +18,7 @@ public:
 private slots:
 
 private:
+    ViewWindow* ui;
     Model* model;
     Controller* controller;
 };
