@@ -3,3 +3,8 @@
 //
 
 #include "Controller.h"
+
+void Controller::createProject(std::string name){
+        model->projects.push_back(new Project(name));
+        model->setProjectError("OK, project correctly added!");
+}

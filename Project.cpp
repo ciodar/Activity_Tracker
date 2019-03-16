@@ -8,7 +8,7 @@ Project::Project(std::string name) {
     Project::name = name;
 }
 
-std::string Project::getName() {
+std::string Project::getName() const {
     return Project::name;
 }
 
@@ -40,3 +40,8 @@ void Project::addTask(Task *task) {
     tasks.push_back(task);
     notify();
 }
+
+bool Project::operator==(const std::string rhs) const {
+    return Project::name == rhs;
+}
+

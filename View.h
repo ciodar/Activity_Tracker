@@ -6,6 +6,7 @@
 #define ACTIVITY_TRACKER_VIEW_H
 
 #include <QMainWindow>
+#include <iostream>
 #include "Model.h"
 #include "Controller.h"
 #include "ViewWindow.h"
@@ -15,8 +16,9 @@ public:
     View(Model* m, Controller* c, QWidget *parent = nullptr);
     ~View();
     virtual void update() override;
-private slots:
 
+private slots:
+    void onCreateProject();
 private:
     ViewWindow* ui;
     Model* model;

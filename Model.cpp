@@ -9,7 +9,6 @@ void Model::notify() {
         observer->update();
 }
 
-
 void Model::subscribe(Observer* o) {
     observers.push_back(o);
 }
@@ -17,3 +16,14 @@ void Model::subscribe(Observer* o) {
 void Model::unsubscribe(Observer* o) {
     observers.remove(o);
 }
+
+std::string Model::getProjectError(){
+    std::cout << projectError;
+    return projectError;
+}
+
+void Model::setProjectError(std::string error) {
+    projectError = error;
+    //std::cout << error;
+}
+
