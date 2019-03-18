@@ -4,8 +4,10 @@
 
 #include "Task.h"
 
-Task::Task(std::string) {
-
+Task::Task(std::string name,QDate start,QDateTime duration) {
+    Task::name = name;
+    Task::taskDate = start;
+    Task::taskDuration = duration;
 }
 
 std::string Task::getName() {
@@ -30,10 +32,10 @@ void Task::notify() {
     }
 }
 
-time_t Task::getTaskDate() {
+QDate Task::getTaskDate() {
     return Task::taskDate;
 }
 
-time_t Task::getTaskDuration() {
+QDateTime Task::getTaskDuration() {
     return Task::taskDuration;
 }

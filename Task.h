@@ -8,13 +8,13 @@
 #include <string>
 #include <ctime>
 #include <list>
-
+#include <QDateTime>
 #include "Subject.h"
 
 
 class Task : public Subject {
 public:
-    explicit Task(std::string name);
+    explicit Task(std::string name,QDate start,QDateTime duration);
 
     void subscribe(Observer* o) override;
     void unsubscribe(Observer* o) override;
@@ -22,12 +22,12 @@ public:
 
     std::string getName();
     void setName(const std::string name);
-    time_t getTaskDate();
-    time_t getTaskDuration();
+    QDate getTaskDate();
+    QDateTime getTaskDuration();
 protected:
     std::string name;
-    time_t taskDate;
-    time_t taskDuration;
+    QDate taskDate;
+    QDateTime taskDuration;
 private:
     std::list<Observer*> observers;
 };

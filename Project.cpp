@@ -8,6 +8,9 @@ Project::Project(std::string name) {
     Project::name = name;
 }
 
+Project::~Project(){
+    Project::tasks.remove_if([](Task *task){delete task; return true;});
+}
 std::string Project::getName() const {
     return Project::name;
 }

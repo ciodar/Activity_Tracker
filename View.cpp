@@ -38,4 +38,11 @@ void View::onCreateProject() {
     update();
 }
 
+void View::onCreateTask(){
+    std::string taskName = ui->taskInput->text().toUtf8().constData();
+    std::string projectName = ui->projectCombo->currentText().toUtf8().constData();
+    std::cout << "View project:" << projectName <<std::endl;
+    controller->addTaskToProject(projectName,taskName,ui->taskStartDate->dateTime(),ui->taskEndDate->dateTime());
+    //controller->createTask()
+}
 

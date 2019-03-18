@@ -15,9 +15,12 @@
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QComboBox>
+#include <QtWidgets/QDateTimeEdit>
 #include <QMenuBar>
 #include <QAction>
 #include <QObject>
+#include <QtWidgets/QTableView>
+
 QT_BEGIN_NAMESPACE
 
 class ViewWindow {
@@ -35,20 +38,24 @@ public:
     QLabel *projectError;
     QLabel *comboLabel;
     QComboBox *projectCombo;
-    /*QPushButton *submitButton;
     QLabel *taskLabel;
     QLineEdit *taskInput;
-    QLabel *taskDateLabel;
-    QDateTimeEdit *taskDate;*/
+    QLabel *taskStartDateLabel;
+    QDateTimeEdit *taskStartDate;
+    QLabel *taskEndDateLabel;
+    QDateTimeEdit *taskEndDate;
+    QPushButton *submitTask;
+    QTableView *viewTask;
     void setupUi(QMainWindow *View) {
+        //TODO Refactor the view and add containers for single form functions
         if (View->objectName().isEmpty())
             View->setObjectName(QStringLiteral("ViewWindow"));
-        View->resize(400, 300);
+        View->resize(800, 600);
         //Main widget
         ViewWidget = new QWidget(View);
         ViewWidget->setObjectName(QStringLiteral("ViewWidget"));
+        //Layout of the fields. Consists in a grid with a label and an input.
         formLayout = new QFormLayout;
-
         createMenus(View);
         createActions(View);
         //ProjectWidget = new QWidget(View);
@@ -69,39 +76,48 @@ public:
         //Error message
         projectError = new QLabel(ViewWidget);
         projectError->setObjectName(QStringLiteral("projectError"));
+        //-----PROJECT END -----
+        //-----TASK START -----
+        //label for projects dropdown
         comboLabel = new QLabel(ViewWidget);
         comboLabel->setObjectName(QStringLiteral("comboLabel"));
+        //Dropdown input with the names of the projects
         projectCombo = new QComboBox(ViewWidget);
         projectCombo->setObjectName(QStringLiteral("projectCombo"));
+        //Label for task Name
+        taskLabel = new QLabel(ViewWidget);
+        taskLabel->setObjectName(QStringLiteral("taskLabel"));
+        //Task name input
+        taskInput = new QLineEdit(ViewWidget);
+        taskInput->setObjectName(QStringLiteral("taskInput"));
+        taskStartDateLabel = new QLabel(ViewWidget);
+        taskStartDateLabel->setObjectName(QStringLiteral("taskDateLabel"));
+        taskStartDate = new QDateTimeEdit(ViewWidget);
+        taskStartDate->setObjectName(QStringLiteral("taskStartDate"));
+        taskStartDate->setDateTime(QDateTime::currentDateTime());
+        taskEndDateLabel = new QLabel(ViewWidget);
+        taskEndDateLabel->setObjectName(QStringLiteral("taskEndDateLabel"));
+        taskEndDate = new QDateTimeEdit(ViewWidget);
+        taskEndDate->setObjectName(QStringLiteral("taskEndDate"));
+        taskEndDate->setDateTime(QDateTime::currentDateTime());
+        submitTask = new QPushButton(ViewWidget);
+        submitTask->setObjectName(QStringLiteral("submitTask"));
+        viewTask = new QTableView(ViewWidget);
+        //-----TASK END -----
+        //Inserimento dei campi in layout
         formLayout->addRow(projectLabel,projectInput);
         formLayout->addRow(projectError,submitProject);
         formLayout->addRow(comboLabel,projectCombo);
-        //projectError->setGeometry(QRect(20, 130, 100, 21));
-        //Button to save and store Task Data
-        /*submitButton = new QPushButton(ViewWidget);
-        submitButton->setObjectName(QStringLiteral("submitButton"));
-        submitButton->setGeometry(QRect(200, 50, 113, 32));
-        //Label for Task name input
-        taskLabel = new QLabel(ViewWidget);
-        taskLabel->setObjectName(QStringLiteral("taskLabel"));
-        taskLabel->setGeometry(QRect(20, 60, 60, 21));
-        //Input for task name
-        taskInput = new QLineEdit(ViewWidget);
-        taskInput->setObjectName(QStringLiteral("taskInput"));
-        taskInput->setGeometry(QRect(90, 60, 104, 21));
-        taskInput->setAlignment(Qt::AlignLeft);
-        //Label for task date
-        taskDateLabel = new QLabel(ViewWidget);
-        taskDateLabel->setObjectName(QStringLiteral("taskDateLabel"));
-        taskDateLabel->setGeometry(QRect(20, 90, 60, 21));
-        //Date input for task reference date
-        //taskDate = new QDateTimeEdit;
-        //taskDate->setDisplayFormat("MMM d yyyy");*/
+        formLayout->addRow(taskLabel,taskInput);
+        formLayout->addRow(taskStartDateLabel,taskStartDate);
+        formLayout->addRow(taskEndDateLabel,taskEndDate);
+        formLayout->addRow(submitTask);
+
         ViewWidget->setLayout(formLayout);
         View->setCentralWidget(ViewWidget);
-
         retranslateUi(View);
         QObject::connect(submitProject, SIGNAL(clicked()), View, SLOT(onCreateProject()));
+        QObject::connect(submitTask, SIGNAL(clicked()), View, SLOT(onCreateTask()));
 
         QMetaObject::connectSlotsByName(View);
     } // setupUi
@@ -111,6 +127,10 @@ public:
         submitProject->setText(QApplication::translate("ViewWidget", "Create Project", nullptr));
         projectLabel->setText(QApplication::translate("ViewWidget", "Project Name", nullptr));
         comboLabel->setText(QApplication::translate("ViewWidget","Project", nullptr));
+        taskLabel->setText(QApplication::translate("ViewWidget","Task Name",nullptr));
+        taskStartDateLabel->setText(QApplication::translate("ViewWidget","Start", nullptr));
+        taskEndDateLabel->setText(QApplication::translate("ViewWidget","End", nullptr));
+        submitTask->setText(QApplication::translate("ViewWidget","Create Task", nullptr));
         newProj->setText(QObject::tr("&New"));
         newProj->setStatusTip(QObject::tr("Create a new project"));
         //taskDateLabel->setText(QApplication::translate("ViewWindow", "Date", nullptr));

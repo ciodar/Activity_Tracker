@@ -9,11 +9,14 @@
 #include "Project.h"
 #include <list>
 #include <algorithm>
+#include <QDateTime>
 
 class Controller {
 public:
     explicit Controller(Model* m) : model(m) {}
     void createProject(std::string name);
+    void addTaskToProject(std::string projectName, std::string taskName,QDateTime startDate,QDateTime endDate);
+    QString secondsToString(qint64 seconds);
 private:
     Model* model;
 };

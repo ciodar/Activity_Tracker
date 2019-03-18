@@ -19,6 +19,7 @@ public:
 
 private slots:
     void onCreateProject();
+    void onCreateTask();
 private:
     ViewWindow* ui;
     Model* model;

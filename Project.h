@@ -14,6 +14,7 @@
 class Project : public Subject {
 public:
     explicit Project(std::string name);
+    ~Project();
     bool operator==(const std::string rhs) const;
     void subscribe(Observer* o) override;
     void unsubscribe(Observer* o) override;
