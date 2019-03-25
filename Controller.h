@@ -10,13 +10,13 @@
 #include <list>
 #include <algorithm>
 #include <QDateTime>
-
 class Controller {
 public:
     explicit Controller(Model* m) : model(m) {}
     void createProject(std::string name);
     void removeProject(std::string name);
     void addTaskToProject(std::string projectName, std::string taskName,QDateTime startDate,QDateTime endDate);
+    void removeTaskFromProject(std::string projectName, std::string taskName);
     QTime secondsToTime(qint64 seconds);
 private:
     Model* model;

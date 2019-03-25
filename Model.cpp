@@ -18,7 +18,6 @@ void Model::unsubscribe(Observer* o) {
 }
 
 std::string Model::getProjectError(){
-    std::cout << projectError;
     return projectError;
 }
 

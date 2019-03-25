@@ -33,6 +33,7 @@ private slots:
     void on_projectRemove_clicked();
     void on_taskSubmit_clicked();
     void on_projectList_itemSelectionChanged();
+    void on_taskRemove_clicked();
 private:
     Ui::MainWindow* ui;
     ViewWindow* vw;
