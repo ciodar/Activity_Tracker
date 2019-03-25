@@ -15,8 +15,9 @@ class Controller {
 public:
     explicit Controller(Model* m) : model(m) {}
     void createProject(std::string name);
+    void removeProject(std::string name);
     void addTaskToProject(std::string projectName, std::string taskName,QDateTime startDate,QDateTime endDate);
-    QString secondsToString(qint64 seconds);
+    QTime secondsToTime(qint64 seconds);
 private:
     Model* model;
 };

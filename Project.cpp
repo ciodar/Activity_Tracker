@@ -48,3 +48,7 @@ bool Project::operator==(const std::string rhs) const {
     return Project::name == rhs;
 }
 
+bool Project::operator==(const Project rhs) const {
+    return Project::name == rhs.getName();
+}
+

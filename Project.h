@@ -16,6 +16,7 @@ public:
     explicit Project(std::string name);
     ~Project();
     bool operator==(const std::string rhs) const;
+    bool operator==(const Project rhs) const;
     void subscribe(Observer* o) override;
     void unsubscribe(Observer* o) override;
     void notify() override;
@@ -24,11 +25,11 @@ public:
     void setName(const std::string name);
     void deleteTask(Task *task);
     void addTask(Task *task);
+    std::list<Task*> tasks;
 protected:
     std::string name;
 private:
     std::list<Observer*> observers;
-    std::list<Task*> tasks;
 };
 
 
