@@ -14,6 +14,7 @@ class Controller {
 public:
     explicit Controller(Model* m) : model(m) {}
     void createProject(std::string name);
+    void updateProject(std::string oldName, std::string newName);
     void removeProject(std::string name);
     void addTaskToProject(std::string projectName, std::string taskName,QDateTime startDate,QDateTime endDate);
     void removeTaskFromProject(std::string projectName, std::string taskName);

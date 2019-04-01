@@ -30,11 +30,14 @@ public:
 
 private slots:
     void on_projectSubmit_clicked();
+    void on_projectUpdate_clicked();
     void on_projectRemove_clicked();
     void on_taskSubmit_clicked();
     void on_projectList_itemSelectionChanged();
     void on_taskRemove_clicked();
 private:
+    void updateDashboard(QDateTime from,QDateTime to);
+    QTime getDuration(QDateTime from,QDateTime to);
     Ui::MainWindow* ui;
     ViewWindow* vw;
     Model* model;

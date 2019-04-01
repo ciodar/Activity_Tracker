@@ -26,13 +26,11 @@ void View::update() {
     ui->taskStart->setDateTime(QDateTime::currentDateTime());
     ui->taskEnd->setDateTime(QDateTime::currentDateTime());
     //Iterate over Model's project list and update inputs and lists
-    std::list<Project*>::iterator pr_it;
-    std::list<Task*>::iterator t_it;
     //Iterate every task of each project
-    for (pr_it = model->projects.begin(); pr_it != model->projects.end(); ++pr_it){
+    for (auto pr_it = model->projects.begin(); pr_it != model->projects.end(); ++pr_it){
         ui->projectCombo->addItem(QString::fromStdString((*pr_it)->getName()));
         ui->projectList->addItem(QString::fromStdString((*pr_it)->getName()));
-        for(t_it = (*pr_it)->tasks.begin(); t_it != (*pr_it)->tasks.end(); ++t_it){
+        for(auto t_it = (*pr_it)->tasks.begin(); t_it != (*pr_it)->tasks.end(); ++t_it){
 
             ui->taskList->insertRow(it);
             ui->taskList->setItem(it, 0, new QTableWidgetItem(QObject::tr("%1").arg(
@@ -40,26 +38,65 @@ void View::update() {
             ui->taskList->setItem(it, 1, new QTableWidgetItem(QObject::tr("%1").arg(
                     QString::fromStdString(((*pr_it)->getName())))));
             ui->taskList->setItem(it, 2, new QTableWidgetItem(QObject::tr("%1").arg(
-                    (*t_it)->getTaskDuration().toString("hh:mm:ss"))));
+                    (*t_it)->getTaskStart().toString("dd/MM/yyyy"))));
+            ui->taskList->setItem(it, 3, new QTableWidgetItem(QObject::tr("%1").arg(
+                    (*t_it)->getTaskStart().toString("hh:mm"))));
+            ui->taskList->setItem(it, 4, new QTableWidgetItem(QObject::tr("%1").arg(
+                    (*t_it)->getTaskEnd().toString("hh:mm"))));
             QPushButton* taskRemove = new QPushButton();
             taskRemove->setObjectName(QStringLiteral("taskRemove"));
             taskRemove->setText("Delete");
-            ui->taskList->setCellWidget(it, 3, taskRemove);
+            ui->taskList->setCellWidget(it, 5, taskRemove);
             QObject::connect(taskRemove, SIGNAL(clicked()), this, SLOT(on_taskRemove_clicked()));
             it++;
         }
     }
 
-    if(ui->projectList->currentItem() != nullptr)
-        ui->projectRemove->setEnabled(true);
-    else
-        ui->projectRemove->setEnabled(false);
+    updateDashboard(ui->dateFromFilter->dateTime(),ui->dateToFilter->dateTime());
 
+    if(ui->projectList->currentItem() != nullptr){
+        ui->projectInput->setText(ui->projectList->currentItem()->text().toUtf8().constData());
+        ui->projectRemove->setEnabled(true);
+        ui->projectUpdate->setEnabled(false);
+    }
+
+    else{
+        ui->projectInput->clear();
+        ui->projectRemove->setEnabled(false);
+        ui->projectUpdate->setEnabled(false);
+    }
+}
+
+void View::updateDashboard(QDateTime from,QDateTime to) {
+    qint64 duration;
+    int it = 0;
+    ui->dashboardWidegt->setRowCount(0);
+    //TODO: move sum function in controller
+    for (auto pr_it = model->projects.begin(); pr_it != model->projects.end(); ++pr_it){
+        duration = 0;
+        for(auto t_it = (*pr_it)->tasks.begin(); t_it != (*pr_it)->tasks.end(); ++t_it){
+            if((*t_it)->getTaskStart() >= from and (*t_it)->getTaskStart() <= to)
+                duration += (*t_it)->getTaskStart().secsTo((*t_it)->getTaskEnd());
+        }
+        if(duration != 0){
+            ui->dashboardWidegt->insertRow(it);
+            ui->taskList->setItem(it, 0, new QTableWidgetItem(QObject::tr("%1").arg(
+                    QString::fromStdString(((*pr_it)->getName())))));
+            ui->dashboardWidegt->setItem(it, 1, new QTableWidgetItem(QObject::tr("%1").arg(
+                    controller->secondsToTime(duration).toString("hh:mm"))));
+            it ++;
+        }
+    }
+}
+
+QTime View::getDuration(QDateTime from,QDateTime to){
+    return controller->secondsToTime(from.secsTo(to));
 }
 
 void View::on_projectSubmit_clicked() {
     //TODO: handle duplicates
     std::string name = ui->projectInput->text().toUtf8().constData();
+
     controller->createProject(name);
     ui->projectInput->clear();
 }
@@ -67,20 +104,22 @@ void View::on_projectSubmit_clicked() {
 void View::on_taskSubmit_clicked(){
     std::string taskName = ui->taskName->text().toUtf8().constData();
     std::string projectName = ui->projectCombo->currentText().toUtf8().constData();
-    std::cout << "View project:" << projectName <<std::endl;
+    //std::cout << "View project:" << projectName <<std::endl;
     controller->addTaskToProject(projectName,taskName,ui->taskStart->dateTime(),ui->taskEnd->dateTime());
-    //controller->createTask()
+}
+
+void View::on_projectUpdate_clicked(){
+    std::string newName = ui->projectInput->text().toUtf8().constData();
+    std::string oldName;
+    if(ui->projectList->currentItem() != nullptr){
+        oldName = ui->projectList->currentItem()->text().toUtf8().constData();
+        controller->updateProject(oldName,newName);
+    }
 }
 
 void View::on_projectRemove_clicked(){
-    std::cout << "Remove project clicked" << std::endl;
+    //std::cout << "Remove project clicked" << std::endl;
     std::string projectName;
-    QList<QListWidgetItem*>::iterator it;
-    /*for(it = ui->projectList->selectedItems().begin();it != ui->projectList->selectedItems().end(); ++it) {
-        projectName = (*it)->text().toUtf8().constData();
-        std::cout <<"Deleting " << projectName << std::endl;
-        controller->removeProject(projectName);
-    }*/
     if(ui->projectList->currentItem() != nullptr){
         projectName = ui->projectList->currentItem()->text().toUtf8().constData();
         controller->removeProject(projectName);
@@ -89,8 +128,12 @@ void View::on_projectRemove_clicked(){
 
 void View::on_projectList_itemSelectionChanged()
 {
-    if(ui->projectList->currentItem() != nullptr)
+    if(ui->projectList->currentItem() != nullptr){
+        ui->projectInput->setText(ui->projectList->currentItem()->text().toUtf8().constData());
         ui->projectRemove->setEnabled(true);
+        ui->projectUpdate->setEnabled(true);
+    }
+
 }
 
 void View::on_taskRemove_clicked() {

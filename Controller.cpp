@@ -10,7 +10,15 @@ void Controller::createProject(std::string name){
     model->setProjectError("OK, project correctly added!");
     model->notify();
 }
-
+void Controller::updateProject(std::string oldName, std::string newName) {
+    if(newName != ""){
+        std::list<Project*>::iterator it = std::find_if(model->projects.begin(), model->projects.end(),[&oldName](Project* object){return object->getName() == oldName;});
+        if (it != model->projects.end()){
+            (*it)->setName(newName);
+        }
+    }
+    model->notify();
+}
 void Controller::removeProject(std::string name){
     if(name != ""){
         std::list<Project*>::iterator it = std::find_if(model->projects.begin(), model->projects.end(),[&name](Project* object){return object->getName() == name;});
@@ -22,12 +30,11 @@ void Controller::removeProject(std::string name){
 }
 
 void Controller::addTaskToProject(std::string projectName, std::string taskName, QDateTime startDate, QDateTime endDate) {
-    std::list<Task*>::iterator t_it;
     std::cout << "start Date: " << startDate.toString("dd hh:mm:ss").toUtf8().constData() << "end Date: " << endDate.toString("dd hh:mm:ss").toUtf8().constData() << std::endl;
     if(projectName != ""){
         auto it = std::find_if(model->projects.begin(), model->projects.end(),[&projectName](Project* object){return object->getName() == projectName;});
         if (it != model->projects.end()){
-            (*it)->addTask(new Task(taskName,startDate.date(),secondsToTime(startDate.secsTo(endDate))));
+            (*it)->addTask(new Task(taskName,startDate,endDate));
 /*            for(t_it = (*it)->tasks.begin(); t_it != (*it)->tasks.end(); ++t_it){
 //                std::cout << "Task duration: " << (*t_it)->getTaskDuration().toString("dd hh:mm:ss").toUtf8().constData();
 //                std::cout << "Real string" << QDateTime::fromString(secondsToTime(startDate.secsTo(endDate)),"dd hh:mm:ss").toString("dd hh:mm:ss").toUtf8().constData();

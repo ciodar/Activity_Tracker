@@ -14,7 +14,7 @@
 
 class Task : public Subject {
 public:
-    explicit Task(std::string name,QDate start,QTime duration);
+    explicit Task(std::string name,QDateTime start,QDateTime end);
     ~Task();
     void subscribe(Observer* o) override;
     void unsubscribe(Observer* o) override;
@@ -22,12 +22,12 @@ public:
 
     std::string getName();
     void setName(const std::string name);
-    QDate getTaskDate();
-    QTime getTaskDuration();
+    QDateTime getTaskStart();
+    QDateTime getTaskEnd();
 protected:
     std::string name;
-    QDate taskDate;
-    QTime taskDuration;
+    QDateTime taskStart;
+    QDateTime taskEnd;
 private:
     std::list<Observer*> observers;
 };
