@@ -3,6 +3,8 @@ project(Activity_Tracker)
 
 set(CMAKE_CXX_STANDARD 11)
 
+add_subdirectory(activity_tracker_test)
+
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Instruct CMake to run moc automatically when needed.

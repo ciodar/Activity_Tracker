@@ -6,13 +6,14 @@
 #define ACTIVITY_TRACKER_PROJECT_H
 
 #include <string>
-#include <list>
+#include <map>
 
 #include "Subject.h"
 #include "Task.h"
 
 class Project : public Subject {
 public:
+    Project();
     explicit Project(std::string name);
     ~Project();
     bool operator==(const std::string rhs) const;
@@ -23,9 +24,10 @@ public:
 
     std::string getName() const;
     void setName(const std::string name);
-    void deleteTask(Task *task);
+    void deleteTask(int taskId);
     void addTask(Task *task);
-    std::list<Task*> tasks;
+    Task* getTask(int taskId);
+    std::map<int,Task*> tasks;
 protected:
     std::string name;
 private:

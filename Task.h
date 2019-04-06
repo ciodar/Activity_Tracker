@@ -7,14 +7,19 @@
 
 #include <string>
 #include <ctime>
+#include <iostream>
 #include <list>
+
 #include <QDateTime>
 #include "Subject.h"
 
 
 class Task : public Subject {
 public:
+    Task();
     explicit Task(std::string name,QDateTime start,QDateTime end);
+    Task(const Task &t);
+
     ~Task();
     void subscribe(Observer* o) override;
     void unsubscribe(Observer* o) override;
@@ -22,6 +27,8 @@ public:
 
     std::string getName();
     void setName(const std::string name);
+    void setStart(QDateTime start);
+    void setEnd(QDateTime end);
     QDateTime getTaskStart();
     QDateTime getTaskEnd();
 protected:

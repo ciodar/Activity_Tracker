@@ -17,12 +17,4 @@ void Model::unsubscribe(Observer* o) {
     observers.remove(o);
 }
 
-std::string Model::getProjectError(){
-    return projectError;
-}
-
-void Model::setProjectError(std::string error) {
-    projectError = error;
-    //std::cout << error;
-}
 

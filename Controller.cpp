@@ -7,7 +7,6 @@
 void Controller::createProject(std::string name){
     //TODO handle duplicates
     model->projects.push_back(new Project(name));
-    model->setProjectError("OK, project correctly added!");
     model->notify();
 }
 void Controller::updateProject(std::string oldName, std::string newName) {
@@ -44,21 +43,37 @@ void Controller::addTaskToProject(std::string projectName, std::string taskName,
     model->notify();
 }
 
-void Controller::removeTaskFromProject(std::string projectName, std::string taskName) {
+void Controller::removeTaskFromProject(std::string projectName, int taskId) {
     std::list<Task*>::iterator t_it;
     std::list<Project*>::iterator p_it;
+    //std::cout << "Controller removing line" << taskId << "of project " << projectName << std::endl;
     if(projectName != ""){
         auto p_it = std::find_if(model->projects.begin(), model->projects.end(),[&projectName](Project* object){return object->getName() == projectName;});
         if (p_it != model->projects.end()){
-            t_it = std::find_if((*p_it)->tasks.begin(), (*p_it)->tasks.end(), [&taskName](Task* task){return task->getName() == taskName;});
+            (*p_it)->deleteTask(taskId);
+          /*  t_it = std::find_if((*p_it)->tasks.begin(), (*p_it)->tasks.end(), [&taskName](Task* task){return task->getName() == taskName;});
             if(t_it != (*p_it)->tasks.end())
-                (*p_it)->tasks.remove((*t_it));
+                (*p_it)->tasks.remove((*t_it));*/
         }
     }
     model->notify();
 }
 
 
+
+Task* Controller::retrieveTaskInfo(std::string projectName, int taskId) {
+    Task *task;
+    if(projectName != ""){
+        auto p_it = std::find_if(model->projects.begin(), model->projects.end(),[&projectName](Project* object){return object->getName() == projectName;});
+        if (p_it != model->projects.end()){
+            task = (*p_it)->getTask(taskId);
+            /*  t_it = std::find_if((*p_it)->tasks.begin(), (*p_it)->tasks.end(), [&taskName](Task* task){return task->getName() == taskName;});
+              if(t_it != (*p_it)->tasks.end())
+                  (*p_it)->tasks.remove((*t_it));*/
+        }
+    }
+    return task;
+}
 
 /// seconds as "X days, X hours, X minutes, X seconds" string
 QTime Controller::secondsToTime(qint64 seconds)
@@ -68,4 +83,26 @@ QTime Controller::secondsToTime(qint64 seconds)
     qint64 days = seconds / DAY;
     QTime t = QTime(0,0).addSecs(seconds % DAY);
     return t;
+}
+
+void Controller::updateTask(std::string projectName, int taskId, std::string newName, std::string newProjectName,
+                            QDateTime newStart, QDateTime newEnd) {
+    Task* task;
+    if(projectName != ""){
+        auto p_it = std::find_if(model->projects.begin(), model->projects.end(),[&projectName](Project* object){return object->getName() == projectName;});
+        if (p_it != model->projects.end()) {
+            task = (*p_it)->tasks.find(taskId)->second;
+            task->setName(newName);
+            task->setStart(newStart);
+            task->setEnd(newEnd);
+            if(projectName != newProjectName){
+                auto np_it = std::find_if(model->projects.begin(), model->projects.end(),[&newProjectName](Project* object){return object->getName() == newProjectName;});
+                if (np_it != model->projects.end()) {
+                    (*np_it)->addTask(new Task(*task));
+                    (*p_it)->deleteTask(taskId);
+                }
+            }
+        }
+    }
+    model->notify();
 }

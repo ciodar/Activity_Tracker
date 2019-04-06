@@ -7,13 +7,24 @@
 View::View(Model* m, Controller* c, QWidget* parent, ViewWindow *v) : QMainWindow(parent), ui(new Ui::MainWindow), model(m), controller(c), vw(v) {
     model->subscribe(this);
     ui->setupUi(this);
+    setup();
     update();
 }
 View::~View() {
     model->unsubscribe(this);
     delete ui;
 }
-
+void View::setup(){
+    //ui->taskList->setColumnHidden(0,true);
+    ui->taskStart->setDateTime(QDateTime::currentDateTime());
+    ui->taskEnd->setDateTime(QDateTime::currentDateTime());
+    ui->dateFromFilter->setDateTime(QDateTime::currentDateTime());
+    ui->dateToFilter->setDateTime(QDateTime::currentDateTime());
+    ui->projectRemove->setEnabled(false);
+    ui->projectUpdate->setEnabled(false);
+    ui->taskUpdate->setEnabled(false);
+    ui->taskRemove->setEnabled(false);
+}
 void View::update() {
     int it = 0;
     //std::string projectError = model->getProjectError();
@@ -23,8 +34,7 @@ void View::update() {
     ui->projectList->clear();
     ui->taskList->setRowCount(0);
     //setto la data di inizio e fine al momento corrente
-    ui->taskStart->setDateTime(QDateTime::currentDateTime());
-    ui->taskEnd->setDateTime(QDateTime::currentDateTime());
+
     //Iterate over Model's project list and update inputs and lists
     //Iterate every task of each project
     for (auto pr_it = model->projects.begin(); pr_it != model->projects.end(); ++pr_it){
@@ -34,19 +44,21 @@ void View::update() {
 
             ui->taskList->insertRow(it);
             ui->taskList->setItem(it, 0, new QTableWidgetItem(QObject::tr("%1").arg(
-                    QString::fromStdString((*t_it)->getName()))));
+                    QString::fromStdString(std::to_string((*t_it).first)))));
             ui->taskList->setItem(it, 1, new QTableWidgetItem(QObject::tr("%1").arg(
-                    QString::fromStdString(((*pr_it)->getName())))));
+                    QString::fromStdString((*t_it).second->getName()))));
             ui->taskList->setItem(it, 2, new QTableWidgetItem(QObject::tr("%1").arg(
-                    (*t_it)->getTaskStart().toString("dd/MM/yyyy"))));
+                    QString::fromStdString(((*pr_it)->getName())))));
             ui->taskList->setItem(it, 3, new QTableWidgetItem(QObject::tr("%1").arg(
-                    (*t_it)->getTaskStart().toString("hh:mm"))));
+                    (*t_it).second->getTaskStart().toString("dd/MM/yyyy"))));
             ui->taskList->setItem(it, 4, new QTableWidgetItem(QObject::tr("%1").arg(
-                    (*t_it)->getTaskEnd().toString("hh:mm"))));
+                    (*t_it).second->getTaskStart().toString("hh:mm"))));
+            ui->taskList->setItem(it, 5, new QTableWidgetItem(QObject::tr("%1").arg(
+                    (*t_it).second->getTaskEnd().toString("hh:mm"))));
             QPushButton* taskRemove = new QPushButton();
             taskRemove->setObjectName(QStringLiteral("taskRemove"));
             taskRemove->setText("Delete");
-            ui->taskList->setCellWidget(it, 5, taskRemove);
+            ui->taskList->setCellWidget(it, 6, taskRemove);
             QObject::connect(taskRemove, SIGNAL(clicked()), this, SLOT(on_taskRemove_clicked()));
             it++;
         }
@@ -57,7 +69,7 @@ void View::update() {
     if(ui->projectList->currentItem() != nullptr){
         ui->projectInput->setText(ui->projectList->currentItem()->text().toUtf8().constData());
         ui->projectRemove->setEnabled(true);
-        ui->projectUpdate->setEnabled(false);
+        ui->projectUpdate->setEnabled(true);
     }
 
     else{
@@ -75,8 +87,8 @@ void View::updateDashboard(QDateTime from,QDateTime to) {
     for (auto pr_it = model->projects.begin(); pr_it != model->projects.end(); ++pr_it){
         duration = 0;
         for(auto t_it = (*pr_it)->tasks.begin(); t_it != (*pr_it)->tasks.end(); ++t_it){
-            if((*t_it)->getTaskStart() >= from and (*t_it)->getTaskStart() <= to)
-                duration += (*t_it)->getTaskStart().secsTo((*t_it)->getTaskEnd());
+            if((*t_it).second->getTaskStart().date() >= from.date() and (*t_it).second->getTaskStart().date() <= to.date())
+                duration += (*t_it).second->getTaskStart().secsTo((*t_it).second->getTaskEnd());
         }
         if(duration != 0){
             ui->dashboardWidegt->insertRow(it);
@@ -138,15 +150,59 @@ void View::on_projectList_itemSelectionChanged()
 
 void View::on_taskRemove_clicked() {
     //HACK: a combination of taskName and taskProject is not the best way to retrieve data from model.
-    std::string taskName;
+    int taskId;
     std::string projectName;
     std::cout <<"Remove task clicked" << std::endl;
     QWidget *w = qobject_cast<QWidget *>(sender()->parent());
     if(w){
         int row = ui->taskList->indexAt(w->pos()).row();
-        taskName = ui->taskList->item(row,0)->text().toUtf8().constData();
-        projectName = ui->taskList->item(row,1)->text().toUtf8().constData();
-        std::cout << "Row name: " << taskName << std::endl;
-        controller->removeTaskFromProject(projectName,taskName);
+        taskId = ui->taskList->item(row,0)->text().toInt();
+        projectName = ui->taskList->item(row,2)->text().toUtf8().constData();
+        std::cout << "Row ID: " << taskId << std::endl;
+        controller->removeTaskFromProject(projectName,taskId);
     }
 }
+
+void View::on_taskList_cellClicked(int row, int column)
+{
+    int taskId;
+    int comboIndex;
+    std::string projectName;
+    Task* task;
+    QWidget *w = qobject_cast<QWidget *>(sender()->parent());
+    if(w) {
+        std::cout << "Clicked row" << row <<"std endl";
+        taskId = ui->taskList->item(row,0)->text().toInt();
+        projectName = ui->taskList->item(row,2)->text().toUtf8().constData();
+        std::cout << "searching in project " << projectName << ",task " << taskId <<std::endl;
+        task = controller->retrieveTaskInfo(projectName,taskId);
+        if(task != nullptr){
+            ui->taskName->setText(QObject::tr("%1").arg(
+                    QString::fromStdString(task->getName())));
+            ui->taskStart->setDateTime(task->getTaskStart());
+            ui->taskEnd->setDateTime(task->getTaskEnd());
+            comboIndex = ui->projectCombo->findText(QString::fromStdString(projectName));
+            if(comboIndex != -1)
+                ui->projectCombo->setCurrentIndex(comboIndex);
+        }
+        ui->taskUpdate->setEnabled(true);
+        ui->taskRemove->setEnabled(true);
+    }
+}
+void View::on_taskUpdate_clicked()
+{
+    int row = ui->taskList->currentRow();
+    std::cout << row << std::endl;
+    if(row > -1){
+        int taskId = ui->taskList->item(row,0)->text().toInt();
+        std::string projectName = ui->taskList->item(row,2)->text().toUtf8().constData();
+        std::string newName = ui->taskName->text().toUtf8().constData();
+        std::string newproject = ui->projectCombo->currentText().toUtf8().constData();
+        QDateTime newStart = ui->taskStart->dateTime();
+        QDateTime newEnd = ui->taskEnd->dateTime();
+        controller->updateTask(projectName,taskId,newName,newproject,newStart,newEnd);
+    }
+
+}
+
+
