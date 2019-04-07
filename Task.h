@@ -31,6 +31,7 @@ public:
     void setEnd(QDateTime end);
     QDateTime getTaskStart();
     QDateTime getTaskEnd();
+    qint64 getDuration();
 protected:
     std::string name;
     QDateTime taskStart;

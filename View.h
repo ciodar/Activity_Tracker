@@ -27,7 +27,6 @@ public:
     explicit View(Model* m, Controller* c, QWidget *parent = nullptr, ViewWindow *vw = nullptr);
     ~View();
     virtual void update() override;
-
 private slots:
     void on_projectSubmit_clicked();
     void on_projectUpdate_clicked();
@@ -37,10 +36,13 @@ private slots:
     void on_taskList_cellClicked(int row, int column);
     void on_taskRemove_clicked();
     void on_taskUpdate_clicked();
+    void on_dateFromFilter_dateChanged(const QDate &date);
+    void on_dateToFilter_dateChanged(const QDate &date);
 private:
+    void clear();
     void setup();
+    void checkInputs();
     void updateDashboard(QDateTime from,QDateTime to);
-    QTime getDuration(QDateTime from,QDateTime to);
     Ui::MainWindow* ui;
     ViewWindow* vw;
     Model* model;

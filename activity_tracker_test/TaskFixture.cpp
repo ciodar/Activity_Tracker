@@ -35,16 +35,32 @@ TEST_F(TaskSuite,SetName){
 }
 
 TEST_F(TaskSuite,SetStart){
-    t.setStart(QDateTime::fromString("M1d1y9800:01:02","'M'M'd'd'y'yyhh:mm:ss"));
-    ASSERT_EQ(QDateTime::fromString("M1d1y9800:01:02","'M'M'd'd'y'yyhh:mm:ss"),t.getTaskStart());
+    QDateTime start;
+    start = QDateTime::fromString("01/04/2019 01:00:00","dd/MM/yyyy hh:mm:ss");
+    t.setStart(start);
+    ASSERT_EQ(start,t.getTaskStart());
 }
 
 TEST_F(TaskSuite,SetEnd){
-    t.setEnd(QDateTime::fromString("M1d1y9800:01:02","'M'M'd'd'y'yyhh:mm:ss"));
-    ASSERT_EQ(QDateTime::fromString("M1d1y9800:01:02","'M'M'd'd'y'yyhh:mm:ss"),t.getTaskEnd());
+    QDateTime end;
+    end = QDateTime::fromString("01/04/2019 02:30:00","dd/MM/yyyy hh:mm:ss");
+    t.setEnd(end);
+    ASSERT_EQ(end,t.getTaskEnd());
 }
 
 TEST_F(TaskSuite,DeleteTask){
     p.deleteTask(1);
     ASSERT_EQ(p.tasks.begin(),p.tasks.end());
 }
+
+TEST_F(TaskSuite,Duration){
+    QDateTime start;
+    QDateTime end;
+    start = QDateTime::fromString("01/04/2019 01:00:00","dd/MM/yyyy hh:mm:ss");
+    end = QDateTime::fromString("01/04/2019 01:01:00","dd/MM/yyyy hh:mm:ss");
+    t.setStart(start);
+    t.setEnd(end);
+    ASSERT_EQ(t.getDuration(),60);
+}
+
+

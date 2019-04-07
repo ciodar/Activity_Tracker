@@ -17,4 +17,10 @@ void Model::unsubscribe(Observer* o) {
     observers.remove(o);
 }
 
+std::list<Project *>::iterator Model::findProject(std::string projectName) {
+    //Can be replaced with auto
+    std::list<Project*>::iterator it = std::find_if(Model::projects.begin(), Model::projects.end(),[&projectName](Project* object){return object->getName() == projectName;});
+    return it;
+}
+
 

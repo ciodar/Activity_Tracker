@@ -23,16 +23,44 @@ void View::setup(){
     ui->projectRemove->setEnabled(false);
     ui->projectUpdate->setEnabled(false);
     ui->taskUpdate->setEnabled(false);
-    ui->taskRemove->setEnabled(false);
 }
-void View::update() {
-    int it = 0;
-    //std::string projectError = model->getProjectError();
-    //ui->projectError->setText(QString::fromStdString(projectError));
+
+void View::clear(){
     //Clear every record in inputs and lists
     ui->projectCombo->clear();
     ui->projectList->clear();
     ui->taskList->setRowCount(0);
+}
+
+void View::checkInputs(){
+    //Checks current view status and enables/disables inputs consequently
+    if(ui->projectList->currentItem() != nullptr){
+        ui->projectInput->setText(ui->projectList->currentItem()->text().toUtf8().constData());
+        ui->projectRemove->setEnabled(true);
+        ui->projectUpdate->setEnabled(true);
+    }
+
+    else{
+        ui->projectInput->clear();
+        ui->projectRemove->setEnabled(false);
+        ui->projectUpdate->setEnabled(false);
+    }
+    if(ui->taskList->currentItem() != nullptr){
+
+        ui->taskUpdate->setEnabled(true);
+    }
+
+    else{
+        ui->projectInput->clear();
+        ui->taskUpdate->setEnabled(false);
+    }
+}
+
+void View::update() {
+    int it = 0;
+    //std::string projectError = model->getProjectError();
+    //ui->projectError->setText(QString::fromStdString(projectError));
+    clear();
     //setto la data di inizio e fine al momento corrente
 
     //Iterate over Model's project list and update inputs and lists
@@ -66,17 +94,9 @@ void View::update() {
 
     updateDashboard(ui->dateFromFilter->dateTime(),ui->dateToFilter->dateTime());
 
-    if(ui->projectList->currentItem() != nullptr){
-        ui->projectInput->setText(ui->projectList->currentItem()->text().toUtf8().constData());
-        ui->projectRemove->setEnabled(true);
-        ui->projectUpdate->setEnabled(true);
-    }
+    checkInputs();
 
-    else{
-        ui->projectInput->clear();
-        ui->projectRemove->setEnabled(false);
-        ui->projectUpdate->setEnabled(false);
-    }
+    ui->taskList->resizeColumnsToContents();
 }
 
 void View::updateDashboard(QDateTime from,QDateTime to) {
@@ -88,21 +108,17 @@ void View::updateDashboard(QDateTime from,QDateTime to) {
         duration = 0;
         for(auto t_it = (*pr_it)->tasks.begin(); t_it != (*pr_it)->tasks.end(); ++t_it){
             if((*t_it).second->getTaskStart().date() >= from.date() and (*t_it).second->getTaskStart().date() <= to.date())
-                duration += (*t_it).second->getTaskStart().secsTo((*t_it).second->getTaskEnd());
+                duration += (*t_it).second->getDuration();
         }
         if(duration != 0){
             ui->dashboardWidegt->insertRow(it);
-            ui->taskList->setItem(it, 0, new QTableWidgetItem(QObject::tr("%1").arg(
+            ui->dashboardWidegt->setItem(it, 0, new QTableWidgetItem(QObject::tr("%1").arg(
                     QString::fromStdString(((*pr_it)->getName())))));
             ui->dashboardWidegt->setItem(it, 1, new QTableWidgetItem(QObject::tr("%1").arg(
                     controller->secondsToTime(duration).toString("hh:mm"))));
             it ++;
         }
     }
-}
-
-QTime View::getDuration(QDateTime from,QDateTime to){
-    return controller->secondsToTime(from.secsTo(to));
 }
 
 void View::on_projectSubmit_clicked() {
@@ -185,8 +201,7 @@ void View::on_taskList_cellClicked(int row, int column)
             if(comboIndex != -1)
                 ui->projectCombo->setCurrentIndex(comboIndex);
         }
-        ui->taskUpdate->setEnabled(true);
-        ui->taskRemove->setEnabled(true);
+        checkInputs();
     }
 }
 void View::on_taskUpdate_clicked()
@@ -205,4 +220,16 @@ void View::on_taskUpdate_clicked()
 
 }
 
+void View::on_dateFromFilter_dateChanged(const QDate &date)
+{
+    if(date > ui->dateToFilter->date())
+        ui->dateToFilter->setDate(date);
+    updateDashboard(ui->dateFromFilter->dateTime(),ui->dateToFilter->dateTime());
+}
 
+void View::on_dateToFilter_dateChanged(const QDate &date)
+{
+    if(date < ui->dateFromFilter->date())
+        ui->dateFromFilter->setDate(date);
+    updateDashboard(ui->dateFromFilter->dateTime(),ui->dateToFilter->dateTime());
+}

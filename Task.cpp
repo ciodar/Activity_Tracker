@@ -60,3 +60,12 @@ QDateTime Task::getTaskStart() {
 QDateTime Task::getTaskEnd() {
     return Task::taskEnd;
 }
+
+qint64 Task::getDuration() {
+    qint64 duration;
+    duration = taskStart.secsTo(taskEnd);
+    if(duration < 0)
+        return 0;
+    else
+        return duration;
+}
