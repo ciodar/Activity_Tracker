@@ -17,13 +17,10 @@ void Model::unsubscribe(Observer* o) {
     observers.remove(o);
 }
 
-std::string Model::getProjectError(){
-    std::cout << projectError;
-    return projectError;
+std::list<Project *>::iterator Model::findProject(std::string projectName) {
+    //Can be replaced with auto
+    std::list<Project*>::iterator it = std::find_if(Model::projects.begin(), Model::projects.end(),[&projectName](Project* object){return object->getName() == projectName;});
+    return it;
 }
 
-void Model::setProjectError(std::string error) {
-    projectError = error;
-    //std::cout << error;
-}
 
