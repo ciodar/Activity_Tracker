@@ -16,6 +16,7 @@ The Timer tabs allows to add a new task, specifying
 * Project related to the activity
 * Start date and time of the activity
 * End date and time of the activity
+
 You can insert manually your start date and time, or also use the timer button to start tracking time. 
 Clicking on the start button, a timer will automatically run and start to record the time spent on your activity.
 Clicking again on the button, a new task will be created with the inserted information.
