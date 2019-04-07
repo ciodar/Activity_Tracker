@@ -5,7 +5,9 @@ See https://toggl.com/
 ## Installation
 This program uses Qt 5.9.5 version.
 If QT is not found automatically, you can specify the path of QT folder using
+```
 CMAKE_PREFIX_PATH "[QT_DIRECTORY]\Qt\5.9.5\mingw53_32"
+```
 specifying the local path of QT DIRECTORY on your pc.
 
 ## General info
