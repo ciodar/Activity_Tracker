@@ -8,7 +8,6 @@
 #include "Model.h"
 #include "Controller.h"
 #include "ui_mainwindow.h"
-#include "ViewWindow.h"
 
 #include <iostream>
 
@@ -17,6 +16,8 @@
 #include <QStringList>
 #include <QtWidgets\QtableWidgetItem>
 #include <QObject>
+#include <QtCore/QTimer>
+
 namespace Ui {
     class MainWindow;
 }
@@ -24,7 +25,7 @@ namespace Ui {
 class View : public QMainWindow, public Observer {
 Q_OBJECT
 public:
-    explicit View(Model* m, Controller* c, QWidget *parent = nullptr, ViewWindow *vw = nullptr);
+    explicit View(Model* m, Controller* c, QWidget *parent = nullptr);
     ~View();
     virtual void update() override;
 private slots:
@@ -38,15 +39,17 @@ private slots:
     void on_taskUpdate_clicked();
     void on_dateFromFilter_dateChanged(const QDate &date);
     void on_dateToFilter_dateChanged(const QDate &date);
+    void on_timerButton_clicked();
+    void tick();
 private:
     void clear();
     void setup();
     void checkInputs();
     void updateDashboard(QDateTime from,QDateTime to);
     Ui::MainWindow* ui;
-    ViewWindow* vw;
     Model* model;
     Controller* controller;
+    QTimer timer;
 };
 
 

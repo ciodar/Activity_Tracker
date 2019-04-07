@@ -4,7 +4,7 @@
 
 #include "View.h"
 
-View::View(Model* m, Controller* c, QWidget* parent, ViewWindow *v) : QMainWindow(parent), ui(new Ui::MainWindow), model(m), controller(c), vw(v) {
+View::View(Model* m, Controller* c, QWidget* parent) : QMainWindow(parent), ui(new Ui::MainWindow), model(m), controller(c){
     model->subscribe(this);
     ui->setupUi(this);
     setup();
@@ -15,6 +15,7 @@ View::~View() {
     delete ui;
 }
 void View::setup(){
+
     //ui->taskList->setColumnHidden(0,true);
     ui->taskStart->setDateTime(QDateTime::currentDateTime());
     ui->taskEnd->setDateTime(QDateTime::currentDateTime());
@@ -232,4 +233,27 @@ void View::on_dateToFilter_dateChanged(const QDate &date)
     if(date < ui->dateFromFilter->date())
         ui->dateFromFilter->setDate(date);
     updateDashboard(ui->dateFromFilter->dateTime(),ui->dateToFilter->dateTime());
+}
+
+void View::on_timerButton_clicked()
+{
+    if(!timer.isActive()){
+        ui->taskSubmit->setEnabled(false);
+        ui->timerDisplay->setTime(QTime(0,0));
+        ui->taskStart->setDateTime(QDateTime::currentDateTime());
+        timer.setInterval(1000);
+        timer.start();
+        connect(&timer, SIGNAL(timeout()), this, SLOT(tick()));
+    }
+    else{
+        timer.stop();
+        controller->addTaskToProject(ui->projectCombo->currentText().toStdString(),ui->taskName->text().toStdString(),ui->taskStart->dateTime(),ui->taskStart->dateTime().addSecs(ui->timerDisplay->time().second()));
+        ui->timerDisplay->setTime(QTime(0,0));
+        disconnect(&timer, SIGNAL(timeout()), 0, 0);
+        ui->taskSubmit->setEnabled(true);
+    }
+}
+
+void View::tick() {
+    ui->timerDisplay->setTime(ui->timerDisplay->time().addSecs(1));
 }
