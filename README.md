@@ -1,9 +1,12 @@
 # Activity_Tracker
-Activity Tracker project inspired on Toggl for university exam project
+Activity Tracker project inspired on Toggl for university exam project.
 See https://toggl.com/
 
+##Description
+This Project is based on MVC model and uses QT for the GUI.
+
 ## Installation
-This program uses Qt 5.9.5 version.
+This program uses QT 5.9.5 version.
 If QT is not found automatically, you can specify the path of QT folder using
 ```
 CMAKE_PREFIX_PATH "[QT_DIRECTORY]\Qt\5.9.5\mingw53_32"
