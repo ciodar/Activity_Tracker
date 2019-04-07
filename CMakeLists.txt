@@ -14,6 +14,9 @@ set(CMAKE_AUTOUIC ON)
 # Find the QtWidgets library
 find_package(Qt5Widgets CONFIG REQUIRED)
 
-add_executable(Activity_Tracker main.cpp Task.cpp Task.h Project.cpp Project.h Subject.h Observer.h Model.cpp Model.h Controller.cpp Controller.h View.cpp View.h MainWindow.ui)
+set(SOURCE_FILES Task.cpp Task.h Project.cpp Project.h Subject.h Observer.h Model.cpp Model.h Controller.cpp Controller.h View.cpp View.h MainWindow.ui)
+add_executable(Activity_Tracker main.cpp)
+add_library(core ${SOURCE_FILES})
 # Use the Widgets module from Qt 5.
-target_link_libraries(Activity_Tracker Qt5::Widgets)
+target_link_libraries(core Qt5::Widgets)
+target_link_libraries(Activity_Tracker Qt5::Widgets core)

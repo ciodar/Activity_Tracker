@@ -9,6 +9,5 @@ find_package(Qt5Widgets CONFIG REQUIRED)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 set(TEST_SOURCE_FILES runAllTests.cpp ProjectFixture.cpp TaskFixture.cpp MVCFixture.cpp)
-set(SOURCE_FILES ../Project.h ../Project.cpp ../Task.h ../Task.cpp ../Model.h ../Model.cpp ../Controller.h ../Controller.cpp)
-add_executable(runActivityTrackerTests ${TEST_SOURCE_FILES} ${SOURCE_FILES})
-target_link_libraries(runActivityTrackerTests gtest gtest_main Qt5::Widgets)
+add_executable(runActivityTrackerTests ${TEST_SOURCE_FILES})
+target_link_libraries(runActivityTrackerTests gtest gtest_main Qt5::Widgets core)
