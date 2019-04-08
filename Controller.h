@@ -13,13 +13,13 @@
 class Controller {
 public:
     explicit Controller(Model* m) : model(m) {}
-    void createProject(std::string name);
-    void updateProject(std::string oldName, std::string newName);
-    void removeProject(std::string name);
-    void addTaskToProject(std::string projectName, std::string taskName,QDateTime startDate,QDateTime endDate);
-    void removeTaskFromProject(std::string projectName, int taskId);
-    void updateTask(std::string projectName,int taskId, std::string newName, std::string newProjectName, QDateTime newStart,QDateTime newEnd);
-    Task* retrieveTaskInfo(std::string projectName, int taskId);
+    void createProject(const std::string &name);
+    void updateProject(const std::string &oldName,const std::string &newName);
+    void removeProject(const std::string &projectName);
+    void addTaskToProject(const std::string &projectName,const std::string &taskName,const QDateTime &startDate,const QDateTime &endDate);
+    void removeTaskFromProject(const std::string &projectName, int taskId);
+    void updateTask(const std::string &projectName,int taskId,const std::string &newName,const std::string &newProjectName,const QDateTime &newStart,const QDateTime &newEnd);
+    Task* retrieveTaskInfo(const std::string &projectName, int taskId);
     QTime secondsToTime(qint64 seconds);
 private:
     Model* model;

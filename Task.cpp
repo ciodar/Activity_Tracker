@@ -39,20 +39,6 @@ void Task::setEnd(QDateTime end) {
     Task::taskEnd = end;
 }
 
-void Task::subscribe(Observer* o) {
-    observers.push_back(o);
-}
-
-void Task::unsubscribe(Observer* o) {
-    observers.remove(o);
-}
-
-void Task::notify() {
-    for( auto itr = std::begin(observers); itr != std::end(observers); itr++) {
-        (*itr)->update();
-    }
-}
-
 QDateTime Task::getTaskStart() {
     return Task::taskStart;
 }

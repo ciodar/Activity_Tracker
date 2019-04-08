@@ -62,7 +62,6 @@ void View::update() {
     //std::string projectError = model->getProjectError();
     //ui->projectError->setText(QString::fromStdString(projectError));
     clear();
-    //setto la data di inizio e fine al momento corrente
 
     //Iterate over Model's project list and update inputs and lists
     //Iterate every task of each project
@@ -72,6 +71,7 @@ void View::update() {
         for(auto t_it = (*pr_it)->tasks.begin(); t_it != (*pr_it)->tasks.end(); ++t_it){
 
             ui->taskList->insertRow(it);
+
             ui->taskList->setItem(it, 0, new QTableWidgetItem(QObject::tr("%1").arg(
                     QString::fromStdString(std::to_string((*t_it).first)))));
             ui->taskList->setItem(it, 1, new QTableWidgetItem(QObject::tr("%1").arg(
@@ -249,7 +249,7 @@ void View::on_timerButton_clicked()
         timer.stop();
         controller->addTaskToProject(ui->projectCombo->currentText().toStdString(),ui->taskName->text().toStdString(),ui->taskStart->dateTime(),ui->taskStart->dateTime().addSecs(ui->timerDisplay->time().second()));
         ui->timerDisplay->setTime(QTime(0,0));
-        disconnect(&timer, SIGNAL(timeout()), 0, 0);
+
         ui->taskSubmit->setEnabled(true);
     }
 }

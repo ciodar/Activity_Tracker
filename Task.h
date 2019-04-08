@@ -14,16 +14,13 @@
 #include "Subject.h"
 
 
-class Task : public Subject {
+class Task {
 public:
     Task();
     explicit Task(std::string name,QDateTime start,QDateTime end);
     Task(const Task &t);
 
     ~Task();
-    void subscribe(Observer* o) override;
-    void unsubscribe(Observer* o) override;
-    void notify() override;
 
     std::string getName();
     void setName(const std::string name);

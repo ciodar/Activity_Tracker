@@ -18,9 +18,35 @@ void Model::unsubscribe(Observer* o) {
 }
 
 std::list<Project *>::iterator Model::findProject(std::string projectName) {
-    //Can be replaced with auto
-    std::list<Project*>::iterator it = std::find_if(Model::projects.begin(), Model::projects.end(),[&projectName](Project* object){return object->getName() == projectName;});
+    auto it = std::find_if(Model::projects.begin(), Model::projects.end(),[&projectName](Project* object){return object->getName() == projectName;});
     return it;
 }
+
+void Model::addProject(std::string name) {
+    projects.push_back(new Project(name));
+    notify();
+}
+
+void Model::updateProjectName(Project *project,const std::string &newName) {
+    project->setName(newName);
+    notify();
+}
+
+void Model::removeProject(Project *project) {
+    projects.remove(project);
+    notify();
+}
+
+void Model::addTaskToProject(Project *project, Task *task) {
+    project->addTask(task);
+    notify();
+}
+
+void Model::removeTaskFromProject(Project *project,int taskId){
+    project->deleteTask(taskId);
+    notify();
+}
+
+
 
 

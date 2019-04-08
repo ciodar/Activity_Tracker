@@ -21,22 +21,8 @@ std::string Project::getName() const {
     return Project::name;
 }
 
-void Project::setName(const std::string name) {
+void Project::setName(std::string name) {
     Project::name = name;
-}
-
-void Project::subscribe(Observer* o) {
-    observers.push_back(o);
-}
-
-void Project::unsubscribe(Observer* o) {
-    observers.remove(o);
-}
-
-void Project::notify() {
-    for( auto itr = std::begin(observers); itr != std::end(observers); itr++) {
-        (*itr)->update();
-    }
 }
 
 void Project::deleteTask(int taskId) {
@@ -60,11 +46,11 @@ Task* Project::getTask(int taskId) {
     return tasks[taskId];
 }
 
-bool Project::operator==(const std::string rhs) const {
+bool Project::operator==(const std::string &rhs) const {
     return Project::name == rhs;
 }
 
-bool Project::operator==(const Project rhs) const {
+bool Project::operator==(const Project &rhs) const {
     return Project::name == rhs.getName();
 }
 

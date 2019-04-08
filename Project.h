@@ -11,19 +11,16 @@
 #include "Subject.h"
 #include "Task.h"
 
-class Project : public Subject {
+class Project {
 public:
     Project();
     explicit Project(std::string name);
     ~Project();
-    bool operator==(const std::string rhs) const;
-    bool operator==(const Project rhs) const;
-    void subscribe(Observer* o) override;
-    void unsubscribe(Observer* o) override;
-    void notify() override;
+    bool operator==(const std::string &rhs) const;
+    bool operator==(const Project &rhs) const;
 
     std::string getName() const;
-    void setName(const std::string name);
+    void setName(std::string name);
     void deleteTask(int taskId);
     void addTask(Task *task);
     Task* getTask(int taskId);

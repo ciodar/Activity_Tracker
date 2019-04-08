@@ -17,6 +17,11 @@ public:
     virtual void notify() override;
     std::list<Project*>::iterator findProject(std::string projectName);
     std::list<Project*> projects;
+    void addProject(std::string projectName);
+    void updateProjectName(Project *project,const std::string &newName);
+    void removeProject(Project *project);
+    void addTaskToProject(Project *project,Task *task);
+    void removeTaskFromProject(Project *project,int taskId);
 private:
     std::list<Observer*> observers;
 };
