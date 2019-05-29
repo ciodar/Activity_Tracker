@@ -2,7 +2,7 @@
 Activity Tracker project inspired on Toggl for university exam project.
 See https://toggl.com/
 
-##Description
+## Description
 This Project is based on MVC model and uses QT for the GUI.
 
 ## Installation
