@@ -28,7 +28,8 @@ void Model::addProject(std::string name) {
 }
 
 void Model::updateProjectName(Project *project,const std::string &newName) {
-    project->setName(newName);
+    if(this->findProject(newName) == this->projects.end())
+        project->setName(newName);
     notify();
 }
 

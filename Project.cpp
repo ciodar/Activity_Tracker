@@ -35,6 +35,7 @@ void Project::deleteTask(int taskId) {
 
 void Project::addTask(Task *task) {
     int key;
+    //I'm allowing the creation of multiple object for the same time period.
     if(tasks.rbegin() != tasks.rend())
         key = tasks.rbegin()->first + 1;
     else
@@ -43,7 +44,7 @@ void Project::addTask(Task *task) {
 }
 
 Task* Project::getTask(int taskId) {
-    return tasks[taskId];
+    return tasks.find(taskId)->second;
 }
 
 bool Project::operator==(const std::string &rhs) const {

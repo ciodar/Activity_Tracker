@@ -34,3 +34,10 @@ TEST_F(ProjectSuite, ChangeName) {
 TEST_F(ProjectSuite, Equality) {
     ASSERT_TRUE(p == q);
 }
+
+TEST_F(ProjectSuite, GetTask){
+    ASSERT_NO_FATAL_FAILURE(Task* t = p.getTask(-1));
+    ASSERT_EQ(p.getTask(-1), p.tasks.end()->second);
+    //Map::find returns an iterator to Map::end if not found.
+    //Comparing a Task* object to the Task* pointer of Map::end,it does work,but is it the best solution?
+}

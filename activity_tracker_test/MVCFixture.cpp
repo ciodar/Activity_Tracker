@@ -24,11 +24,24 @@ TEST_F(MVCSuite,ProjectCreation){
     ASSERT_NE(model->findProject("New Project"),model->projects.end());
 }
 
+TEST_F(MVCSuite,ProjectAlreadyInPlace){
+    controller->createProject("Duplicate Project");
+    controller->createProject("Duplicate Project");
+    ASSERT_EQ(model->projects.size(),1);
+}
+
 TEST_F(MVCSuite,ProjectChange){
     controller->createProject("New Project");
     controller->updateProject("New Project","Changed Name");
     ASSERT_EQ(model->findProject("New Project"),model->projects.end());
     ASSERT_NE(model->findProject("Changed Name"),model->projects.end());
+}
+
+TEST_F(MVCSuite,ProjectChangeAlreadyInPlace){
+    controller->createProject("My Project");
+    controller->createProject("My new Project");
+    controller->updateProject("My new Project","My Project");
+    ASSERT_NE(model->findProject("My new Project"),model->projects.end());
 }
 
 TEST_F(MVCSuite,ProjectRemove){
@@ -62,11 +75,16 @@ TEST_F(MVCSuite,TaskUpdate){
     //ASSERT_EQ(task,0);
 }
 
-TEST_F(MVCSuite,TaskRemove){
+TEST_F(MVCSuite,TaskRemove) {
     controller->createProject("Project");
-    controller->addTaskToProject("Project","New Task",QDateTime::currentDateTime(),QDateTime::currentDateTime());
-    controller->removeTaskFromProject("Project",1);
-    ASSERT_EQ((*model->findProject("Project"))->tasks.size(),0);
+    controller->addTaskToProject("Project", "New Task", QDateTime::currentDateTime(), QDateTime::currentDateTime());
+    controller->removeTaskFromProject("Project", 1);
+    ASSERT_EQ((*model->findProject("Project"))->tasks.size(), 0);
     //task = controller->retrieveTaskInfo("Project",1);
     //ASSERT_EQ(task,0);
+}
+
+TEST_F(MVCSuite,TaskNotFound) {
+    controller->createProject("Project");
+    ASSERT_EQ(*model->findProject("-1"),*model->projects.end());
 }
