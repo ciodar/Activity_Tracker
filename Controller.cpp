@@ -28,7 +28,14 @@ void Controller::removeProject(const std::string &projectName){
 
 void Controller::addTaskToProject(const std::string &projectName,const std::string &taskName,const QDateTime &startDate,const QDateTime &endDate) {
     //std::cout << "start Date: " << startDate.toString("dd hh:mm:ss").toUtf8().constData() << "end Date: " << endDate.toString("dd hh:mm:ss").toUtf8().constData() << std::endl;
-    if(!projectName.empty()){
+    if(projectName.empty()){
+        createProject("No project");
+        auto it = model->findProject("No project");
+        if (it != model->projects.end()){
+            model->addTaskToProject((*it),new Task(taskName,startDate,endDate));
+        }
+    }
+    else{
         auto it = model->findProject(projectName);
         if (it != model->projects.end()){
             model->addTaskToProject((*it),new Task(taskName,startDate,endDate));

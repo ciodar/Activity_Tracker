@@ -30,7 +30,7 @@
                     <attribute name="title">
                         <string>Timer</string>
                     </attribute>
-                    <widget class="TaskContainer" name="taskList">
+                    <widget class="QTableWidget" name="taskList">
                         <property name="geometry">
                             <rect>
                                 <x>10</x>
@@ -362,13 +362,6 @@
         </widget>
     </widget>
     <layoutdefault spacing="6" margin="11"/>
-    <customwidgets>
-        <customwidget>
-            <class>TaskContainer</class>
-            <extends>QTableWidget</extends>
-            <header>taskcontainer.h</header>
-        </customwidget>
-    </customwidgets>
     <resources/>
     <connections/>
 </ui>
