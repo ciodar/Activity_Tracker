@@ -35,7 +35,7 @@ private slots:
     void on_taskSubmit_clicked();
     void on_projectList_itemSelectionChanged();
     void on_taskList_cellClicked(int row, int column);
-    void on_taskRemove_clicked();
+    void taskRemove_clicked();
     void on_taskUpdate_clicked();
     void on_dateFromFilter_dateChanged(const QDate &date);
     void on_dateToFilter_dateChanged(const QDate &date);

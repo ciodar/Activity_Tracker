@@ -88,7 +88,7 @@ void View::update() {
             taskRemove->setObjectName(QStringLiteral("taskRemove"));
             taskRemove->setText("Delete");
             ui->taskList->setCellWidget(it, 6, taskRemove);
-            QObject::connect(taskRemove, SIGNAL(clicked()), this, SLOT(on_taskRemove_clicked()));
+            QObject::connect(taskRemove, SIGNAL(clicked()), this, SLOT(taskRemove_clicked()));
             it++;
         }
     }
@@ -165,7 +165,7 @@ void View::on_projectList_itemSelectionChanged()
 
 }
 
-void View::on_taskRemove_clicked() {
+void View::taskRemove_clicked() {
     //HACK: a combination of taskName and taskProject is not the best way to retrieve data from model.
     int taskId;
     std::string projectName;
@@ -241,6 +241,7 @@ void View::on_timerButton_clicked()
         ui->taskSubmit->setEnabled(false);
         ui->timerDisplay->setTime(QTime(0,0));
         ui->taskStart->setDateTime(QDateTime::currentDateTime());
+        ui->timerButton->setText("Stop");
         timer.setInterval(1000);
         timer.start();
         connect(&timer, SIGNAL(timeout()), this, SLOT(tick()));
@@ -249,8 +250,9 @@ void View::on_timerButton_clicked()
         timer.stop();
         controller->addTaskToProject(ui->projectCombo->currentText().toStdString(),ui->taskName->text().toStdString(),ui->taskStart->dateTime(),ui->taskStart->dateTime().addSecs(ui->timerDisplay->time().second()));
         ui->timerDisplay->setTime(QTime(0,0));
-
+        ui->timerButton->setText("Start");
         ui->taskSubmit->setEnabled(true);
+        disconnect(&timer, SIGNAL(timeout()), this, SLOT(tick()));
     }
 }
 
