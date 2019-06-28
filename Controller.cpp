@@ -5,8 +5,9 @@
 #include "Controller.h"
 
 void Controller::createProject(const std::string &name){
-    if(model->findProject(name) == model->projects.end())
+    if(name != "" && model->findProject(name) == model->projects.end()){
         model->addProject(name);
+    }
 }
 void Controller::updateProject(const std::string &oldName, const std::string &newName) {
     if(!newName.empty()){
